@@ -1,4 +1,4 @@
-package com.rest.springbootemployee.exception.repository;
+package com.rest.springbootemployee.repository;
 
 import com.rest.springbootemployee.entity.Company;
 import com.rest.springbootemployee.entity.Employee;

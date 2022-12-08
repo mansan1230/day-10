@@ -2,8 +2,8 @@ package com.rest.springbootemployee.service;
 
 import com.rest.springbootemployee.entity.Employee;
 import com.rest.springbootemployee.exception.NoEmployeeFoundException;
-import com.rest.springbootemployee.exception.repository.EmployeeMongoRepository;
-import com.rest.springbootemployee.exception.repository.EmployeeRepository;
+import com.rest.springbootemployee.repository.EmployeeMongoRepository;
+import com.rest.springbootemployee.repository.EmployeeRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 

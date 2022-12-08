@@ -3,7 +3,7 @@ package com.rest.springbootemployee;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rest.springbootemployee.entity.Company;
 import com.rest.springbootemployee.entity.Employee;
-import com.rest.springbootemployee.exception.repository.CompanyRepository;
+import com.rest.springbootemployee.repository.CompanyRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,8 +1,8 @@
 package com.rest.springbootemployee;
 
 import com.rest.springbootemployee.entity.Employee;
-import com.rest.springbootemployee.exception.repository.EmployeeMongoRepository;
-import com.rest.springbootemployee.exception.repository.EmployeeRepository;
+import com.rest.springbootemployee.repository.EmployeeMongoRepository;
+import com.rest.springbootemployee.repository.EmployeeRepository;
 import com.rest.springbootemployee.service.EmployeeService;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;

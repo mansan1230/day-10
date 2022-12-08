@@ -1,4 +1,4 @@
-package com.rest.springbootemployee.exception.repository;
+package com.rest.springbootemployee.repository;
 
 import com.rest.springbootemployee.entity.Employee;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -10,5 +10,5 @@ import java.util.List;
 public interface EmployeeMongoRepository extends MongoRepository<Employee, String> {
 
 
-    Object findByGender(String gender);
+    List<Employee> findByGender(String gender);
 }
