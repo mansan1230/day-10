@@ -130,7 +130,7 @@ public class CompanyServiceTest {
 
         // then
         assertThat(actualCompany, equalTo(createdCompany));
-        verify(companyRepository).create(originalCompany);
+        verify(companyMongoRepository).save(originalCompany);
     }
     @Test
     public void should_delete_a_company_when_delete_given_a_id(){
