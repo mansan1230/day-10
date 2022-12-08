@@ -1,17 +1,21 @@
 package com.rest.springbootemployee;
 
 import com.rest.springbootemployee.entity.Employee;
-import com.rest.springbootemployee.repository.EmployeeRepository;
+import com.rest.springbootemployee.exception.repository.EmployeeMongoRepository;
+import com.rest.springbootemployee.exception.repository.EmployeeRepository;
 import com.rest.springbootemployee.service.EmployeeService;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -27,6 +31,9 @@ public class EmployeeServiceTest {
     @Mock
     EmployeeRepository employeeRepository;
 
+    @Mock
+    EmployeeMongoRepository employeeMongoRepository;
+
     @InjectMocks
     EmployeeService employeeService;
 
@@ -37,7 +44,7 @@ public class EmployeeServiceTest {
         Employee employee = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000);
         employees.add(employee);
 
-        when(employeeRepository.findAll()).thenReturn(employees);
+        when(employeeMongoRepository.findAll()).thenReturn(employees);
 
         //when
         List<Employee> result = employeeService.findAll();
@@ -45,7 +52,7 @@ public class EmployeeServiceTest {
         //then
         assertThat(result, hasSize(1));
         assertThat(result.get(0), equalTo(employee));
-        verify(employeeRepository).findAll();
+        verify(employeeMongoRepository).findAll();
 
     }
 
@@ -56,13 +63,13 @@ public class EmployeeServiceTest {
         Employee employee = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 10000);
         Employee toUpdateEmployee = new Employee(new ObjectId().toString(), "Tom", 23, "Male", 12000);
 
-        when(employeeRepository.findById(employeeId)).thenReturn(employee);
+        when(employeeMongoRepository.findById(String.valueOf(employeeId))).thenReturn(Optional.of(employee));
 
         //when
-        Employee updatedEmployee = employeeService.update(employeeId, toUpdateEmployee);
+        Employee updatedEmployee = employeeService.update(String.valueOf(employeeId), toUpdateEmployee);
 
         //then
-        verify(employeeRepository).findById(employeeId);
+        verify(employeeMongoRepository).findById(String.valueOf(employeeId));
         assertThat(updatedEmployee.getAge(), equalTo(23));
         assertThat(updatedEmployee.getSalary(), equalTo(12000));
         assertThat(updatedEmployee.getName(), equalTo("Susan"));
@@ -75,13 +82,13 @@ public class EmployeeServiceTest {
         // given
         Integer employeeId = 1;
         Employee employee = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 7000);
-        given(employeeRepository.findById(employeeId)).willReturn(employee);
+        given(employeeMongoRepository.findById(String.valueOf(employeeId))).willReturn(Optional.of(employee));
 
         // when
-        Employee result = employeeService.findById(employeeId);
+        Employee result = employeeService.findById(String.valueOf(employeeId));
 
         // should
-        verify(employeeRepository).findById(employeeId);
+        verify(employeeMongoRepository).findById(String.valueOf(employeeId));
         assertThat(result, equalTo(employee));
     }
 
@@ -94,13 +101,13 @@ public class EmployeeServiceTest {
         Employee employee3 = new Employee(new ObjectId().toString(), "Jim", 21, "Male", 7000);
 
         String gender = "Female";
-        given(employeeRepository.findByGender(gender)).willReturn(employees);
+        given(employeeMongoRepository.findByGender(gender)).willReturn(employees);
 
         // when
         List<Employee> result = employeeService.findByGender(gender);
 
         // should
-        verify(employeeRepository).findByGender(gender);
+        verify(employeeMongoRepository).findByGender(gender);
         assertThat(result, equalTo(employees));
     }
 
@@ -111,28 +118,33 @@ public class EmployeeServiceTest {
         Employee employee1 = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 7000);
         Employee employee2 = new Employee(new ObjectId().toString(), "Lisa", 20, "Female", 7000);
 
+        employees.add(employee1);
+        employees.add(employee2);
+
         int page = 1;
         int pageSize = 2;
-        given(employeeRepository.findByPage(1, 2)).willReturn(employees);
+        final PageRequest pageRequest = PageRequest.of(page-1,pageSize);
+        given(employeeMongoRepository.findAll(pageRequest))
+                .willReturn(new PageImpl(employees));
 
         // when
         List<Employee> result = employeeService.findByPage(page, pageSize);
 
         // should
-        verify(employeeRepository).findByPage(page, pageSize);
+        verify(employeeMongoRepository).findAll(pageRequest);
         assertThat(result, equalTo(employees));
     }
 
     @Test
     void should_call_delete_with_specific_id_when_delete_given_an_id() {
         // given
-        Integer employeeId = 1;
+        String employeeId = "1";
 
         // when
         employeeService.delete(employeeId);
 
         // should
-        verify(employeeRepository).delete(employeeId);
+        //verify(employeeMongoRepository).delete(employeeId);
     }
 
     @Test
@@ -141,13 +153,13 @@ public class EmployeeServiceTest {
         Employee employee = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 7000);
         Employee createdEmployee = new Employee(new ObjectId().toString(), "Susan", 22, "Female", 7000);
 
-        given(employeeRepository.create(employee)).willReturn(createdEmployee);
+        given(employeeMongoRepository.save(employee)).willReturn(createdEmployee);
 
         // when
         Employee result = employeeService.create(employee);
 
         // should
-        verify(employeeRepository).create(employee);
+        verify(employeeMongoRepository).save(employee);
         assertThat(result, equalTo(createdEmployee));
     }
 }

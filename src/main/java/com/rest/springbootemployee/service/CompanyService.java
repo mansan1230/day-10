@@ -1,7 +1,7 @@
 package com.rest.springbootemployee.service;
 
 import com.rest.springbootemployee.entity.Company;
-import com.rest.springbootemployee.repository.CompanyRepository;
+import com.rest.springbootemployee.exception.repository.CompanyRepository;
 import com.rest.springbootemployee.entity.Employee;
 import org.springframework.stereotype.Service;
 

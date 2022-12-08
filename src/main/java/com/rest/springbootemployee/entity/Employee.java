@@ -60,4 +60,5 @@ public class Employee {
     public void setSalary(Integer salary) {
         this.salary = salary;
     }
+
 }

@@ -1,4 +1,4 @@
-package com.rest.springbootemployee.repository;
+package com.rest.springbootemployee.exception.repository;
 
 import com.rest.springbootemployee.entity.Employee;
 import com.rest.springbootemployee.exception.NoEmployeeFoundException;
@@ -24,9 +24,9 @@ public class EmployeeRepository {
         return employees;
     }
 
-    public Employee findById(Integer id) {
+    public Employee findById(String id) {
         return employees.stream()
-                .filter(employee -> ((Integer) Integer.parseInt(employee.getId())).equals(id))
+                .filter(employee -> (employee.getId()).equals(id))
                 .findFirst()
                 .orElseThrow(NoEmployeeFoundException::new);
     }
@@ -55,7 +55,7 @@ public class EmployeeRepository {
 
 //    requirement: update age and salary
 
-    public void delete(Integer id) {
+    public void delete(String id) {
         Employee existingEmployee = findById(id);
         employees.remove(existingEmployee);
     }
