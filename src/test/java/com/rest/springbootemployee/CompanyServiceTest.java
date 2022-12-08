@@ -123,7 +123,7 @@ public class CompanyServiceTest {
 
         Company createdCompany = new Company("Spring", employees);
 
-        given(companyRepository.create(originalCompany)).willReturn(createdCompany);
+        given(companyMongoRepository.save(originalCompany)).willReturn(createdCompany);
 
         // when
         Company actualCompany = companyService.create(originalCompany);
