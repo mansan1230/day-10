@@ -26,8 +26,9 @@ public class CompanyService {
         return companyMongoRepository.findAll();
     }
 
-    public List<Company> findByPage(Integer page, Integer pageSize) {
-        return companyMongoRepository.findAll(PageRequest.of(page,pageSize))
+    public List<Company> findByPage(int page, int pageSize) {
+        return companyMongoRepository
+                .findAll(PageRequest.of(page-1,pageSize))
                 .toList();
 
     }
@@ -45,15 +46,16 @@ public class CompanyService {
     }
 
     public Company update(String companyId, Company toUpdateCompany) {
-        Company existingCompany = companyRepository.findById(companyId);
+        Company existingCompany = companyMongoRepository.findById(companyId).orElseThrow(NoEmployeeFoundException::new);
         if (toUpdateCompany.getName() != null) {
             existingCompany.setName(toUpdateCompany.getName());
         }
+        companyMongoRepository.save(existingCompany);
         return existingCompany;
     }
 
     public List<Employee> getEmployees(String companyId) {
-        Company company = companyRepository.findById(companyId);
+        Company company = companyMongoRepository.findById(companyId).orElseThrow(NoEmployeeFoundException::new);;
         return company.getEmployees();
     }
 

@@ -82,13 +82,13 @@ public class CompanyServiceTest {
 
         //int id = originalCompany.getId();
         String id = "1";
-        given(companyRepository.findById(id)).willReturn(originalCompany);
+        given(companyMongoRepository.findById(id)).willReturn(Optional.of(originalCompany));
 
         //when
         Company actualCompany = companyService.update(id, toUpdateCompany);
 
         //then
-        verify(companyRepository).findById(id);
+        verify(companyMongoRepository).findById(id);
         assertThat(actualCompany.getName(), equalTo(companyName));
     }
 
@@ -172,7 +172,7 @@ public class CompanyServiceTest {
         int page =2;
         int pageSize = 2;
 
-        final PageRequest pageRequest = PageRequest.of(page,pageSize);
+        final PageRequest pageRequest = PageRequest.of(page-1,pageSize);
         given(companyMongoRepository.findAll(pageRequest))
                 .willReturn(new PageImpl(companies));
 
@@ -195,7 +195,7 @@ public class CompanyServiceTest {
         //int id = company.getId();
         String id = "1";
 
-        given(companyRepository.findById(id)).willReturn(company);
+        given(companyMongoRepository.findById(id)).willReturn(Optional.of(company));
 
         //when
         List<Employee> actualEmployees = companyService.getEmployees(id);
