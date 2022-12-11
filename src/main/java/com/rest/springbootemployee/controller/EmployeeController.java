@@ -1,8 +1,10 @@
 package com.rest.springbootemployee.controller;
 
+import com.rest.springbootemployee.controller.mapper.EmployeeMapper;
 import com.rest.springbootemployee.entity.Employee;
 import com.rest.springbootemployee.exception.NoEmployeeFoundException;
 import com.rest.springbootemployee.service.EmployeeService;
+import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +15,14 @@ import java.util.List;
 public class EmployeeController {
 
     private EmployeeService employeeService;
+    private EmployeeMapper employeeMapper;
 
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService, EmployeeMapper employeeMapper) {
         this.employeeService = employeeService;
+        this.employeeMapper = employeeMapper;
     }
+
+
 
     @GetMapping
     public List<Employee> getAll() {
@@ -28,19 +34,24 @@ public class EmployeeController {
         return employeeService.findById(id);
     }
 
+    //RequestBody Employee -> EmployeeRequest
     @GetMapping(params = {"gender"})
     public List<Employee> getByGender(@RequestParam String gender) {
         return employeeService.findByGender(gender);
     }
 
+
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Employee add(@RequestBody Employee employee) {
-        return employeeService.create(employee);
+    public EmployeeResponse add(@RequestBody EmployeeRequest employeeRequest) {
+        Employee savedEmployee = employeeService.create(employeeMapper.toEntity(employeeRequest));
+        return employeeMapper.toResponse(savedEmployee);
     }
     @PutMapping("/{id}")
-    public Employee update(@PathVariable String id, @RequestBody Employee employee) {
-        return employeeService.update(id, employee);
+    public EmployeeResponse update(@PathVariable String id, @RequestBody EmployeeRequest employeeRequest) {
+        if (!ObjectId.isValid(id)) throw new NoEmployeeFoundException();
+        return employeeMapper.toResponse(employeeService.update(id, employeeMapper.toEntity(employeeRequest)));
     }
 
     @DeleteMapping("/{id}")

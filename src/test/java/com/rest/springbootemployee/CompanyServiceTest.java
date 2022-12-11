@@ -3,8 +3,6 @@ package com.rest.springbootemployee;
 import com.rest.springbootemployee.entity.Company;
 import com.rest.springbootemployee.entity.Employee;
 import com.rest.springbootemployee.repository.CompanyMongoRepository;
-import com.rest.springbootemployee.repository.CompanyRepository;
-import com.rest.springbootemployee.repository.EmployeeMongoRepository;
 import com.rest.springbootemployee.service.CompanyService;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -28,8 +26,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 public class CompanyServiceTest {
-    @Mock
-    CompanyRepository companyRepository;
+
 
 
     @Mock
@@ -49,8 +46,8 @@ public class CompanyServiceTest {
         employees2.add(new Employee(new ObjectId().toString(), "aaa", 20, "Male", 2000));
         employees2.add(new Employee(new ObjectId().toString(), "bbb", 10, "Male", 8000));
 
-        Company company1 = new Company("Spring", employees1);
-        Company company2 = new Company("Boot", employees2);
+        Company company1 = new Company(new ObjectId().toString(), "Spring", employees1);
+        Company company2 = new Company(new ObjectId().toString(), "Boot", employees2);
 
         List<Company> companies = new ArrayList<>(Arrays.asList(company1,company2));
 
@@ -77,8 +74,8 @@ public class CompanyServiceTest {
         employees2.add(new Employee(new ObjectId().toString(), "aaa", 20, "Male", 2000));
         employees2.add(new Employee(new ObjectId().toString(), "bbb", 10, "Male", 8000));
 
-        Company originalCompany = new Company("Spring", employees1);
-        Company toUpdateCompany = new Company(companyName, employees2);
+        Company originalCompany = new Company(new ObjectId().toString(), "Spring", employees1);
+        Company toUpdateCompany = new Company(new ObjectId().toString(), companyName, employees2);
 
         //int id = originalCompany.getId();
         String id = "1";
@@ -99,7 +96,7 @@ public class CompanyServiceTest {
         employees.add(new Employee(new ObjectId().toString(), "lili", 20, "Female", 2000));
         employees.add(new Employee(new ObjectId().toString(), "coco", 10, "Female", 8000));
 
-        Company company = new Company("Spring", employees);
+        Company company = new Company(new ObjectId().toString(), "Spring", employees);
         //int id = company.getId();
         String id = "1";
 
@@ -119,9 +116,9 @@ public class CompanyServiceTest {
         employees.add(new Employee(new ObjectId().toString(), "lili", 20, "Female", 2000));
         employees.add(new Employee(new ObjectId().toString(), "coco", 10, "Female", 8000));
 
-        Company originalCompany = new Company("Spring", employees);
+        Company originalCompany = new Company(new ObjectId().toString(), "Spring", employees);
 
-        Company createdCompany = new Company("Spring", employees);
+        Company createdCompany = new Company(new ObjectId().toString(), "Spring", employees);
 
         given(companyMongoRepository.save(originalCompany)).willReturn(createdCompany);
 
@@ -164,8 +161,9 @@ public class CompanyServiceTest {
         employees4.add(new Employee(new ObjectId().toString(), "aaa", 20, "Male", 2000));
         employees4.add(new Employee(new ObjectId().toString(), "bbb", 10, "Male", 8000));
 
-        Company company1 = companyMongoRepository.save(new Company("Spring", employees1));
-        Company company2 = companyMongoRepository.save(new Company("Boot", employees2));
+        Company company1 = companyMongoRepository.save(new Company(new ObjectId().toString(), "Spring", employees1));
+        Company company2 = companyMongoRepository.save(new Company(new ObjectId().toString(), "Boot", employees2));
+
 
         List<Company> companies = new ArrayList<>(Arrays.asList(company1,company2));
 
@@ -191,7 +189,7 @@ public class CompanyServiceTest {
         Employee employee2 = new Employee(new ObjectId().toString(), "coco", 10, "Female", 8000);
         List<Employee> employees = new ArrayList<>(Arrays.asList(employee1, employee2));
 
-        Company company = new Company("Spring", employees);
+        Company company = new Company(new ObjectId().toString(), "Spring", employees);
         //int id = company.getId();
         String id = "1";
 

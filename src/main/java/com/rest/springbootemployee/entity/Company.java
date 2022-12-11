@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.util.ArrayList;
 import java.util.List;
 @Document
 public class Company {
@@ -12,17 +13,14 @@ public class Company {
     private String name;
     private List<Employee> employees;
 
-    public Company(String name, List<Employee> employees) {
+    public Company(String id, String name, List<Employee> employees) {
+        this.id = id;
         this.name = name;
         this.employees = employees;
     }
 
-    public String getId() {
-        return id;
-    }
+    public Company() {
 
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -42,4 +40,11 @@ public class Company {
     }
 
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }
